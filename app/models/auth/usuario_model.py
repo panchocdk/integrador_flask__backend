@@ -1,6 +1,6 @@
 from ...database import DatabaseConnection
-from models import rol_model, UsuarioRolModel
-from models import status_model, UsuarioStatusModel
+from models import UsuarioRolModel
+from models import UsuarioStatusModel
 class Usuario:
     """Usuario model class"""
 
@@ -16,12 +16,13 @@ class Usuario:
   
     @classmethod
     def is_registered(cls, usuario):
-        query = "SELECT usuario_id FROM chatnet.usuarios WHERE email = %s AND password = %s;"
-        params = (usuario.email, usuario.password)
+        query = "SELECT usuario_id FROM chatnet.usuarios WHERE email = %(email)s AND password = %(password)s;"
+        params = usuario.__dict__
         result = DatabaseConnection.fetch_one(query, params=params)
         if result is not None:
             return True
         return False
+    
     def serialize(self):
         """Serialize object representation """
         
@@ -34,5 +35,23 @@ class Usuario:
             "imagen_de_perfil": self.imagen_de_perfil,
             "rol": UsuarioRolModel.get(UsuarioRolModel(rol_id =self.rol_id)).serialize(),
             "status": UsuarioStatusModel.get(UsuarioStatusModel(status_id= self.status_id)).serialize()
-
         }
+    @classmethod
+    def get(cls, usuario):
+        query = """SELECT * FROM chatnet.usuarios 
+        WHERE email = %(email)s"""
+        params = usuario.__dict__
+        result = DatabaseConnection.fetch_one(query, params=params)
+
+        if result is not None:
+            return cls(
+                usuario_id = result[0],
+                username = result[1],
+                password = result[2],
+                nombre_completo = result[3],
+                email = result[4],
+                imagen_de_perfil = result[5],
+                role_id = result[10],
+                status_id = result[11]
+            )
+        return None
