@@ -67,13 +67,13 @@ class UserController:
             raise InvalidDataError('El apellido es obligatorio')
         if data.get('password') is not None:
             if len(data.get('password'))>=8:
-                data['password'] = data.get('password').strip()
+                data['password'] = data.get('password')
             else:
                 raise InvalidDataError('La contraseña debe tener al menos 8 caracteres')
         else:
             raise InvalidDataError('La contraseña es obligatoria')
         if data.get('date_of_birth') is not None:
-            if isinstance(data.get('date_of_birth'), date):
+            if isinstance(data.get('date_of_birth'), str):
                 data['date_of_birth'] = data.get('date_of_birth')
             else:
                 raise InvalidDataError('Ingrese un formato de fecha valido')
