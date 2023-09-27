@@ -23,7 +23,7 @@ class ServerController:
         else:
             raise InvalidDataError('El nombre del servidor es obligatorio')
         if data.get('description') is not None:
-            data['email'] = data.get('email').strip()
+            data['description'] = data.get('description').strip()
         session['server_name'] = data.get('server_name')
         data['icon_image'] = 'app\static\default\topic.png'
         server = Server(**data)

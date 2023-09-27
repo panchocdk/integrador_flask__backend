@@ -81,7 +81,7 @@ class UserController:
             raise InvalidDataError('La fecha de nacimiento es obligatoria')
         data['status_id'] = 1
         data['role_id'] = 1
-        data['profile_image'] = 'app\static\default\profile.png'
+        data['profile_image'] = 'users\profile.png'
         user = User(**data)
         if not User.is_registered(user):
             User.create(user)
