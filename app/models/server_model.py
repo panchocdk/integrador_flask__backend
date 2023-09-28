@@ -117,3 +117,20 @@ class Server:
         query = '''DELETE FROM discord_chat.servers WHERE server_id=%s'''
         params = server.server_id,
         DatabaseConnection.execute_query(query, params=params)
+
+    @classmethod
+    def get_all_by_name(cls, server):
+        query = '''SELECT * FROM discord_chat.servers
+                    WHERE LOWER(server_name)=%s'''
+        params = server,
+        results = DatabaseConnection.fetch_all(query, params=params)
+        servers = []
+        if results is not None:
+            for result in results:
+                servers.append(cls(
+                        server_id = result[0],
+                        server_name = result[1],
+                        description = result[2],
+                        icon_image = result[3]
+                    ))
+        return servers

@@ -6,6 +6,7 @@ class Channel:
         self.channel_id = kwargs.get('channel_id')
         self.channel_name = kwargs.get('channel_name')
         self.server_id = kwargs.get('server_id')
+        self.server_name = kwargs.get('server_name')
         self.description = kwargs.get('description')
 
     def serialize(self):
@@ -43,8 +44,9 @@ class Channel:
     
     @classmethod
     def get_all(cls, server):
-        query = '''SELECT * FROM discord_chat.channels
-                    WHERE server_id=%s'''
+        query = '''SELECT * FROM discord_chat.channels c
+                    WHERE c.server_id=(SELECT s.server_id FROM discord_chat.servers s
+                                        WHERE s.server_name=%s)'''
         paramas= server,
         results = DatabaseConnection.fetch_all(query, params=paramas)
         channels = []
@@ -61,7 +63,8 @@ class Channel:
     @classmethod
     def create(cls, channel):
         query = '''INSERT INTO discord_chat.channels (channel_name, server_id, description)
-                    VALUES (%(channel_name)s, %(server_id)s, %(description)s)'''
+                    VALUES (%(channel_name)s, (SELECT se.server_id FROM discord_chat.servers se
+                                                WHERE se.server_name=%(server_name)s), %(description)s)'''
         params = channel.__dict__
         DatabaseConnection.execute_query(query, params=params)
 

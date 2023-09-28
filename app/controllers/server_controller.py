@@ -83,3 +83,11 @@ class ServerController:
             return server.serialize(), 200
         else:
             raise SourceNotFound('Servidor no encontrado')
+
+    @classmethod
+    def get_all_by_name(cls, server_name):
+        server_objects = Server.get_all_by_name(server_name)
+        servers = []
+        for server in server_objects:
+            servers.append(server.serialize())
+        return servers, 200

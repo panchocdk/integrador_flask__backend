@@ -13,8 +13,8 @@ class ChannelController:
             raise SourceNotFound('Canal no encontrado')
     
     @classmethod
-    def get_all(cls, server_id):
-        channel_objects = Channel.get_all(server_id)
+    def get_all(cls, server_name):
+        channel_objects = Channel.get_all(server_name)
         channels = []
         for channel in channel_objects:
             channels.append(channel.serialize())
@@ -30,9 +30,9 @@ class ChannelController:
                 raise InvalidDataError('Ingrese un nombre valido para el canal')
         else:
             raise InvalidDataError('El nombre del canal es obligatorio')
-        if data.get('server_id') is not None:
-            if isinstance(data.get('server_id'), int):
-                data['server_id'] = data.get('server_id')
+        if data.get('server_name') is not None:
+            if isinstance(data.get('server_name'), str):
+                data['server_name'] = data.get('server_name').strip()
             else:
                 raise InvalidDataError('Debe ingresar un numero entero')
         else:
