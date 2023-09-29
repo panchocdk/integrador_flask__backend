@@ -42,7 +42,7 @@ class User:
     @classmethod
     def get(cls, user):
         query = '''SELECT * FROM discord_chat.users\
-                    WHERE email=%(email)s'''
+                    WHERE email=%(email)s OR user_id=%(user_id)s'''
         params = user.__dict__
         result = DatabaseConnection.fetch_one(query, params=params)
         if result is not None:

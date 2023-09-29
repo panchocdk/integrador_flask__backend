@@ -13,8 +13,8 @@ class ChatController:
             raise SourceNotFound('Chat no encontrado')
     
     @classmethod
-    def get_all(cls, channel_id):
-        chat_objects = Chat.get_all(channel_id)
+    def get_all(cls, channel_name):
+        chat_objects = Chat.get_all(channel_name)
         chats = []
         for chat in chat_objects:
             chats.append(chat.serialize())

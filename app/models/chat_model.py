@@ -4,6 +4,7 @@ class Chat:
     def __init__(self, **kwargs):
         self.chat_id = kwargs.get('chat_id')
         self.channel_id = kwargs.get('channel_id')
+        self.channel_name = kwargs.get('channel_name')
         self.user_id = kwargs.get('user_id')
         self.chat_date = kwargs.get('chat_date')
         self.message = kwargs.get('message')
@@ -38,7 +39,8 @@ class Chat:
         query = '''SELECT c.* FROM discord_chat.chats c
                     INNER JOIN discord_chat.channels ch
                     ON c.channel_id = ch.channel_id
-                    WHERE c.channel_id=%s'''
+                    WHERE c.channel_id=(SELECT ch.channel_id FROM discord_chat.channels ch
+                                        WHERE ch.channel_name=%s)'''
         params = channel,
         result = DatabaseConnection.fetch_all(query, params=params)
         chats = []
@@ -56,7 +58,8 @@ class Chat:
     @classmethod
     def create(cls, chat):
         query = '''INSERT INTO discord_chat.chats (channel_id, user_id, message)
-                    VALUES (%(channel_id)s, %(user_id)s, %(message)s)'''
+                    VALUES ( (SELECT ch.channel_id FROM discord_chat.channels ch
+                                WHERE ch.channel_name=%(channel_name)s), %(user_id)s, %(message)s)'''
         params = chat.__dict__
         DatabaseConnection.execute_query(query, params=params)
 

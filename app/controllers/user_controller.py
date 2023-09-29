@@ -147,3 +147,11 @@ class UserController:
             User.delete(user)
             return {'message': 'Usuario eliminado correctamente'}, 204
         raise SourceNotFound('Usuario no encontrado')
+
+    @classmethod
+    def get(cls, user_id):
+        user = User.get(User(user_id = user_id))
+        if user is not None:
+            return user.serialize(), 200
+        else:
+            raise SourceNotFound('Usuario no encontrado')
